@@ -15,15 +15,7 @@ pop.drop(pop[pip['ConvertedSalary'] < 120].index, inplace = True)
 pip = pop.dropna(subset=['ConvertedSalary','SalaryType','YearsCodingProf'])
 pip.head(10)
 
-#manipulate ConvertedSalary so that they will all be Monthly values
-def convertToMonthly(x):
-  if (x['SalaryType'] == 'Yearly'):
-    return (int(x['ConvertedSalary']) /12 )
-  if (x['SalaryType'] == 'Weekly'):
-    return (int(x['ConvertedSalary']) *4 )
-  else:
-    return x['ConvertedSalary']
-    
+#Convert USD to Php
 pip['PhpSalary'] = (pip['ConvertedSalary']*51)
 pip.drop(['ConvertedSalary'], axis = 1, inplace = True)
 pip.head(10)
@@ -42,6 +34,11 @@ for i in splitt:
 
 pip['ProfYears'] = ProfYears
 pip.drop(['SalaryType','YearsCodingProf'], axis = 1, inplace = True)
+pip
+
+#Merge Profyears
+ave = pip.groupby("ProfYears").mean()
+pip = ave.reset_index()
 pip
 
 #linear regression plot UwU
